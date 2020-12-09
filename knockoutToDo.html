@@ -71,8 +71,8 @@
                   </tr>
                 </thead>
                 <tbody id="tbody" data-bind="foreach:Mytodo.tasks">
-                  <!-- data-bind="style:{color :$data.status()=='complete'?'green':'red'}" -->
-                  <tr>
+                  <!--  -->
+                  <tr data-bind="style:{color :status=='complete'?'green':'red'}">
                     <td style="padding: 10px 15px" data-bind="text:$data.name "></td>
                     <td style="padding: 10px 15px" data-bind="text:$data.Description "></td>
                     <td style="padding: 10px 15px" data-bind="text:$data.date"></td>
@@ -80,7 +80,7 @@
                     <td style="padding: 10px 15px">
                       <div class="ui segment">
                         <button class="mini ui negative basic button" data-bind="click:Mytodo.deleteTask">Remove</button>
-                        <button class="mini ui positive basic button" data-bind="visible:$data.status!='complete',click:$parent.completeTask">Complete</button>
+                        <button class="mini ui positive basic button" data-bind="visible:status!='complete',click:$parent.completeTask">Complete</button>
                       </div>
                     </td>
                   </tr>

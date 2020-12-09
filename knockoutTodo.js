@@ -14,11 +14,15 @@ var Mytodo = (function () {
     Description: ko.observable(),
     date: ko.observable(d + "/" + m + "/" + y),
     priority: ko.observable(1),
+    status: ko.observable("new"),
   };
 
-  /*--observable ARRAY to hold task-*/
+  /*--observable ARRAY to hold task object-*/
 
   var tasks = ko.observableArray();
+
+  /*visi observable to track empty value and give error*/
+
   var visi = ko.observable(null);
 
   /* ----------add members here -----------*/
@@ -28,10 +32,17 @@ var Mytodo = (function () {
     console.log("addTask");
 
     if (task.name() && task.Description()) {
-      var paylaod = { name: task.name(), Description: task.Description(), date: task.date(), priority: task.priority(), status: ko.observable("new") };
-      tasks.push(ko.toJS(paylaod));
-      console.log(paylaod);
-      setLocalstorage(ko.toJS(paylaod));
+      var payload = {
+        name: task.name(),
+        Description: task.Description(),
+        date: task.date(),
+        priority: task.priority(),
+        status: task.status(),
+      };
+
+      tasks.push(payload);
+      console.log(payload);
+      setLocalstorage(payload);
 
       clearTask();
 
@@ -72,10 +83,10 @@ var Mytodo = (function () {
 
     console.log(data.length);
 
-    for (let i = 0; i < data.length - 1; i++) {
+    for (let i = 0; i <= data.length - 1; i++) {
       tasks.push(data[i]);
 
-      console.log("lopped one", data[i]);
+      console.log(`looped at ${i}`, data[i]);
     }
 
     console.log("point", data);
@@ -114,7 +125,34 @@ var Mytodo = (function () {
   var completeTask = function (task) {
     console.log("task completed ");
 
-    task.status("complete");
+    console.log(task);
+    task.status = "complete";
+
+    //     var payload = {
+    //       name: task.name,
+    //       Description: task.Description,
+    //       date: task.date,
+    //       priority: task.priority,
+    //       status: task.status,
+    //     };
+
+    data = JSON.parse(localStorage.getItem("payload"));
+    if (data !== null) {
+      data.forEach(function (item) {
+        if (item.name == task.name && item.priority == task.priority) {
+          item.status = task.status;
+        }
+      });
+    }
+
+    localStorage.setItem("payload", JSON.stringify(data));
+
+    tasks.removeAll();
+
+    for (let i = 0; i <= data.length - 1; i++) {
+      tasks.push(data[i]);
+      console.log(`looped at ${i}`, data[i]);
+    }
   };
 
   /*----Initialization of DOM[On every DOM Update]-----*/
